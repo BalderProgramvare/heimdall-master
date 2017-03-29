@@ -8,9 +8,11 @@ import no.balder.heimdall.persistence.DataSourceModule;
 import no.balder.heimdall.persistence.RepositoryModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import spark.Spark;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
+import java.time.ZonedDateTime;
 
 import static spark.Spark.*;
 
@@ -31,24 +33,34 @@ public class App {
         CheckInUseCase checkInUseCase = injector.getInstance(CheckInUseCase.class);
         RaiseAlarmUseCase raiseAlarmUseCase = injector.getInstance(RaiseAlarmUseCase.class);
 
-        get("/hello", (req, res) -> "Hello World");
+        get("/hello", (req, res) -> {
+            res.type("application/json");
+            return "{ \"msg\" : \"Hello World\" }";
+        });
 
         post("/checkin", (req, res) -> {
             int contentLength = req.contentLength();
             String body = req.body();
-            log.debug("Received POST with body: " + body);
+            log.debug("Received POST with body: " + body);                                                                                              
             CheckIn checkIn = gson.fromJson(body, CheckIn.class);
+
+            // Never mind the timestamp supplied by the caller, we always set it on the server
+            checkIn.setTimeStamp(ZonedDateTime.now().toString());
+            
             checkInUseCase.checkIn(checkIn);
+            res.type("application/json");
 
             return body;
         });
 
         // Raise the alarm first time
-        post("/alarm/", (req, res) -> {
+        post("/alarm", (req, res) -> {
             String body = req.body();
             final AlarmData alarmData = gson.fromJson(body, AlarmData.class);
+            log.debug("Raising alarm {} ", alarmData);
             raiseAlarmUseCase.raiseAlarm(alarmData);
 
+            res.type("application/json");
             return body;
         });
 
@@ -59,8 +71,11 @@ public class App {
             // Retrieves the UUID of the alarm incident
             final String uuid = req.params(":uuid");
 
+            log.debug("Augmenting alarm {} ", uuid);
             // Updates the database
 
+
+            res.type("application/json");
             return req.body();
         });
 
@@ -70,10 +85,20 @@ public class App {
             // Retrieves the UUID of the alarm incident
             final String uuid = req.params(":uuid");
 
-            // Deactivates the alarm
+            log.debug("Deleting raised alarm {}", uuid);
 
+            // Deactivates the alarm
+            
+
+            res.type("application/json");
             return req.body();
         });
+
+        notFound((req,res) -> {
+            log.warn("Resource " + req.uri() + " not found for method " + req.requestMethod());
+            return (String.format("Not found %s for method %s", req.uri(), req.requestMethod()));
+        });
+
 
         exception(JsonSyntaxException.class, (e, req, res) -> {
             log.info("Invalid request: " + e.getMessage(),e);

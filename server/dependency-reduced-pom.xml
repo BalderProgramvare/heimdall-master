@@ -34,6 +34,50 @@
   </build>
   <dependencies>
     <dependency>
+      <groupId>io.rest-assured</groupId>
+      <artifactId>rest-assured</artifactId>
+      <version>3.0.2</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>groovy</artifactId>
+          <groupId>org.codehaus.groovy</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>groovy-xml</artifactId>
+          <groupId>org.codehaus.groovy</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>httpclient</artifactId>
+          <groupId>org.apache.httpcomponents</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>httpmime</artifactId>
+          <groupId>org.apache.httpcomponents</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>hamcrest-core</artifactId>
+          <groupId>org.hamcrest</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>hamcrest-library</artifactId>
+          <groupId>org.hamcrest</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>tagsoup</artifactId>
+          <groupId>org.ccil.cowan.tagsoup</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>json-path</artifactId>
+          <groupId>io.rest-assured</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>xml-path</artifactId>
+          <groupId>io.rest-assured</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>
       <version>6.10</version>

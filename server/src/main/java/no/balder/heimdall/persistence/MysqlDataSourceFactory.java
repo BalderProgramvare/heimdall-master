@@ -74,8 +74,5 @@ public class MysqlDataSourceFactory implements DbcpDataSourceFactory {
         ds.setInitialSize(5);
 
         return ds;
-
-
     }
-
 }

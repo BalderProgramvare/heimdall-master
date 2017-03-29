@@ -22,6 +22,7 @@ public class CheckInUseCase {
 
     public Long checkIn(CheckIn checkIn) {
         try {
+
             Long inserted = checkInRepository.insert(checkIn);
             return inserted;
         } catch (Exception e) {
